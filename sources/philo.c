@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:38:27 by pibosc            #+#    #+#             */
-/*   Updated: 2023/12/14 20:25:07 by pibosc           ###   ########.fr       */
+/*   Updated: 2023/12/15 23:06:21 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,24 @@
 
 void	eat(t_philo *philo)
 {
-	pthread_mutex_lock(philo->fork_mutex);
-	pthread_mutex_lock(philo->next->fork_mutex);
+	if (philo->id % 2)
+	{
+		pthread_mutex_lock(philo->fork_mutex);
+		printf("%d: %d has taken a fork\n", get_time() - philo->start_time, philo->id);
+		pthread_mutex_lock(philo->next->fork_mutex);
+		printf("%d: %d has taken a fork\n", get_time() - philo->start_time, philo->id);
+	}
+	else
+	{
+		pthread_mutex_lock(philo->next->fork_mutex);
+		printf("%d: %d has taken a fork\n", get_time() - philo->start_time, philo->id);
+		pthread_mutex_lock(philo->fork_mutex);
+		printf("%d: %d has taken a fork\n", get_time() - philo->start_time, philo->id);
+	}
 	philo->is_eating = 0;
 	philo->is_sleeping = 1;
 	philo->last_eat = get_time();
+	philo->nb_eat++;
 	printf("%d: %d is eating\n", philo->last_eat - philo->start_time, philo->id);
 	usleep(1000 * philo->time_to_eat);
 	pthread_mutex_unlock(philo->fork_mutex);
@@ -61,6 +74,7 @@ void	*routine(void *tmp)
 int	main(int argc, char const *argv[])
 {
 	t_philo	*philo;
+	int		i;
 
 	if (argc != 5 && argc != 6)
 	{
@@ -71,10 +85,12 @@ int	main(int argc, char const *argv[])
 			ft_atoi(argv[2]));
 	init_mutex(philo);
 	init_threads(philo);
-	for (int i = 0; i < ft_atoi(argv[1]); i++)
+	i = 0;
+	while (i < ft_atoi(argv[1]))
 	{
 		pthread_join(philo->thread, NULL);
 		philo = philo->next;
+		i++;
 	}
 	return (0);
 }

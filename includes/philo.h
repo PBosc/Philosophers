@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:38:24 by pibosc            #+#    #+#             */
-/*   Updated: 2023/12/14 20:23:47 by pibosc           ###   ########.fr       */
+/*   Updated: 2023/12/15 22:54:49 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,6 @@ void	init_threads(t_philo *philo);
 int		get_time(void);
 void	*routine(void *philo);
 void	init_mutex(t_philo *philo);
+int		monitor(t_philo *philo);
 
 #endif
