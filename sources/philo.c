@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:38:27 by pibosc            #+#    #+#             */
-/*   Updated: 2023/12/15 23:06:21 by pibosc           ###   ########.fr       */
+/*   Updated: 2023/12/16 15:06:26 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,32 @@
 
 void	eat(t_philo *philo)
 {
+	if (philo->is_dead)
+		return ;
 	if (philo->id % 2)
 	{
 		pthread_mutex_lock(philo->fork_mutex);
-		printf("%d: %d has taken a fork\n", get_time() - philo->start_time, philo->id);
+		if (!philo->is_dead)
+			printf("%d: %d has taken a fork\n", get_time() - philo->start_time, philo->id);
 		pthread_mutex_lock(philo->next->fork_mutex);
-		printf("%d: %d has taken a fork\n", get_time() - philo->start_time, philo->id);
+		if (!philo->is_dead)
+			printf("%d: %d has taken a fork\n", get_time() - philo->start_time, philo->id);
 	}
 	else
 	{
 		pthread_mutex_lock(philo->next->fork_mutex);
-		printf("%d: %d has taken a fork\n", get_time() - philo->start_time, philo->id);
+		if (!philo->is_dead)
+			printf("%d: %d has taken a fork\n", get_time() - philo->start_time, philo->id);
 		pthread_mutex_lock(philo->fork_mutex);
-		printf("%d: %d has taken a fork\n", get_time() - philo->start_time, philo->id);
+		if (!philo->is_dead)
+			printf("%d: %d has taken a fork\n", get_time() - philo->start_time, philo->id);
 	}
 	philo->is_eating = 0;
 	philo->is_sleeping = 1;
 	philo->last_eat = get_time();
 	philo->nb_eat++;
-	printf("%d: %d is eating\n", philo->last_eat - philo->start_time, philo->id);
+	if (!philo->is_dead)
+		printf("%d: %d is eating\n", philo->last_eat - philo->start_time, philo->id);
 	usleep(1000 * philo->time_to_eat);
 	pthread_mutex_unlock(philo->fork_mutex);
 	pthread_mutex_unlock(philo->next->fork_mutex);
@@ -40,6 +47,8 @@ void	eat(t_philo *philo)
 
 void	psleep(t_philo *philo)
 {
+	if (philo->is_dead)
+		return ;
 	philo->is_sleeping = 0;
 	philo->is_thinking = 1;
 	printf("%d: %d is sleeping\n", get_time() - philo->start_time, philo->id);
@@ -48,6 +57,8 @@ void	psleep(t_philo *philo)
 
 void	think(t_philo *philo)
 {
+	if (philo->is_dead)
+		return ;
 	philo->is_thinking = 0;
 	philo->is_eating = 1;
 	printf("%d: %d is thinking\n", get_time() - philo->start_time, philo->id);
@@ -86,6 +97,11 @@ int	main(int argc, char const *argv[])
 	init_mutex(philo);
 	init_threads(philo);
 	i = 0;
+	while (1)
+	{
+		if (monitor(philo))
+			break ;
+	}
 	while (i < ft_atoi(argv[1]))
 	{
 		pthread_join(philo->thread, NULL);
