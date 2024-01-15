@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:38:27 by pibosc            #+#    #+#             */
-/*   Updated: 2023/12/16 15:06:26 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/15 18:12:28 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,42 +16,43 @@ void	eat(t_philo *philo)
 {
 	if (philo->is_dead)
 		return ;
-	if (philo->id % 2)
+	if (philo->id == philo->nb_philo - 1)
 	{
 		pthread_mutex_lock(philo->fork_mutex);
-		if (!philo->is_dead)
-			printf("%d: %d has taken a fork\n", get_time() - philo->start_time, philo->id);
+		print_fork(philo);
 		pthread_mutex_lock(philo->next->fork_mutex);
-		if (!philo->is_dead)
-			printf("%d: %d has taken a fork\n", get_time() - philo->start_time, philo->id);
+		print_fork(philo);
 	}
 	else
 	{
 		pthread_mutex_lock(philo->next->fork_mutex);
-		if (!philo->is_dead)
-			printf("%d: %d has taken a fork\n", get_time() - philo->start_time, philo->id);
+		print_fork(philo);
 		pthread_mutex_lock(philo->fork_mutex);
-		if (!philo->is_dead)
-			printf("%d: %d has taken a fork\n", get_time() - philo->start_time, philo->id);
+		print_fork(philo);
 	}
-	philo->is_eating = 0;
-	philo->is_sleeping = 1;
+	pthread_mutex_lock(philo->eat_mutex);
 	philo->last_eat = get_time();
 	philo->nb_eat++;
-	if (!philo->is_dead)
-		printf("%d: %d is eating\n", philo->last_eat - philo->start_time, philo->id);
+	pthread_mutex_unlock(philo->eat_mutex);
+	print_eat(philo);
 	usleep(1000 * philo->time_to_eat);
-	pthread_mutex_unlock(philo->fork_mutex);
-	pthread_mutex_unlock(philo->next->fork_mutex);
+	if (philo->id == philo->nb_philo - 1)
+	{
+		pthread_mutex_unlock(philo->fork_mutex);
+		pthread_mutex_unlock(philo->next->fork_mutex);
+	}
+	else
+	{
+		pthread_mutex_unlock(philo->next->fork_mutex);
+		pthread_mutex_unlock(philo->fork_mutex);
+	}
 }
 
 void	psleep(t_philo *philo)
 {
 	if (philo->is_dead)
 		return ;
-	philo->is_sleeping = 0;
-	philo->is_thinking = 1;
-	printf("%d: %d is sleeping\n", get_time() - philo->start_time, philo->id);
+	print_sleep(philo);
 	usleep(1000 * philo->time_to_sleep);
 }
 
@@ -59,9 +60,7 @@ void	think(t_philo *philo)
 {
 	if (philo->is_dead)
 		return ;
-	philo->is_thinking = 0;
-	philo->is_eating = 1;
-	printf("%d: %d is thinking\n", get_time() - philo->start_time, philo->id);
+	print_think(philo);
 }
 
 void	*routine(void *tmp)
@@ -73,12 +72,9 @@ void	*routine(void *tmp)
 	{
 		if (philo->is_dead)
 			return (NULL);
-		if (philo->is_eating)
-			eat(philo);
-		else if (philo->is_sleeping)
-			psleep(philo);
-		else if (philo->is_thinking)
-			think(philo);
+		eat(philo);
+		psleep(philo);
+		think(philo);
 	}
 }
 
@@ -86,14 +82,19 @@ int	main(int argc, char const *argv[])
 {
 	t_philo	*philo;
 	int		i;
+	int		count_eat;
 
 	if (argc != 5 && argc != 6)
 	{
 		printf("Error: wrong number of arguments\n");
 		return (1);
 	}
+	if (argc == 5)
+		count_eat = -1;
+	else
+		count_eat = ft_atoi(argv[5]);
 	philo = init_philos(ft_atoi(argv[1]), ft_atoi(argv[4]), ft_atoi(argv[3]),
-			ft_atoi(argv[2]));
+			ft_atoi(argv[2]), count_eat);
 	init_mutex(philo);
 	init_threads(philo);
 	i = 0;

@@ -10,6 +10,7 @@ FILES 			= 	philo	\
 					utils	\
 					init	\
 					init_2	\
+					prints	\
 
 SRCS 			= $(addsuffix .c, $(addprefix sources/, $(FILES)))
 

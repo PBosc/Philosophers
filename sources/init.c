@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:56:18 by pibosc            #+#    #+#             */
-/*   Updated: 2023/12/15 22:00:57 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/15 15:30:44 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	philo_push_back(t_philo **philo, t_philo *new)
 }
 
 static void	zero_values(t_philo *philo, int time_to_sleep, int time_to_eat,
-		int time_to_die)
+		int time_to_die, int nb_eat_max)
 {
 	t_philo	*tmp;
 
@@ -55,12 +55,13 @@ static void	zero_values(t_philo *philo, int time_to_sleep, int time_to_eat,
 		tmp->time_to_sleep = time_to_sleep;
 		tmp->time_to_eat = time_to_eat;
 		tmp->time_to_die = time_to_die;
+		tmp->nb_eat_max = nb_eat_max;
 		tmp = tmp->next;
 	}
 }
 
 t_philo	*init_philos(int nb_philo, int time_to_sleep, int time_to_eat,
-		int time_to_die)
+		int time_to_die, int nb_eat_max)
 {
 	t_philo	*philo;
 	t_philo	*tmp;
@@ -84,7 +85,7 @@ t_philo	*init_philos(int nb_philo, int time_to_sleep, int time_to_eat,
 		philo_push_back(&philo, tmp);
 		i++;
 	}
-	zero_values(philo, time_to_sleep, time_to_eat, time_to_die);
+	zero_values(philo, time_to_sleep, time_to_eat, time_to_die, nb_eat_max);
 	tmp = last_philo(philo);
 	tmp->next = philo;
 	philo->prev = tmp;
