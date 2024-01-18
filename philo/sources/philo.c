@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:38:27 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/18 13:45:43 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/18 15:11:54 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	main(int argc, char **argv)
 	if (parsing(argc, argv, &vars))
 		return (1);
 	if (init_vars(&vars))
-		return (1);
+		return (destroy_mutex(&vars), free_philos(vars.philo, &vars), 1);
 	while (1)
 	{
 		if (monitor(vars.philo, &vars))

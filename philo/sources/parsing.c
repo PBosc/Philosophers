@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 11:28:50 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/18 13:32:48 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/18 15:11:03 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,14 @@ int	init_vars(t_vars *vars)
 	vars->philo = init_philos(vars);
 	if (!vars->philo)
 		return (1);
+	init_mutex(vars->philo, vars);
+	vars->end = 0;
+	vars->ate_enough = 0;
 	if (vars->nb_philo == 1)
 	{
 		single_philo(vars);
 		return (1);
 	}
-	init_mutex(vars->philo, vars);
-	vars->end = 0;
-	vars->ate_enough = 0;
 	if (init_threads(vars->philo, vars))
 		return (1);
 	return (0);
