@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:38:27 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/18 15:11:54 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/18 15:58:49 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	*routine(void *tmp)
 	philo = (t_philo *)tmp;
 	vars = philo->vars;
 	if (philo->id % 2 == 0)
-		ft_usleep(vars->tte);
+		ft_usleep(500);
 	while (!stop_philos(vars))
 	{
 		take_forks(philo, vars);
@@ -38,6 +38,8 @@ void	*routine(void *tmp)
 		print_sleep(philo, vars);
 		ft_usleep(vars->tts);
 		print_think(philo, vars);
+		if (vars->tte >= vars->tts)
+			ft_usleep(vars->tte - vars->tts + 1);
 	}
 	return(NULL);
 }

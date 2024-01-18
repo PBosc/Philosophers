@@ -6,13 +6,13 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 18:28:39 by pibosc            #+#    #+#             */
-/*   Updated: 2023/12/18 23:50:39 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/18 16:09:30 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_atoi(const char *nptr)
+long long	ft_atoi(const char *nptr)
 {
 	int			i;
 	int			sign;
@@ -71,4 +71,13 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	if (result)
 		ft_bzero(result, nmemb * size);
 	return (result);
+}
+int	ft_strlen(const char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
 }

@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 11:28:50 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/18 15:11:03 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/18 16:09:06 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ int	parsing(int ac, char **av, t_vars *vars)
 		vars->nb_max_meal = ft_atoi(av[5]);
 	else
 		vars->nb_max_meal = -1;
-	if (vars->nb_philo < 1 || vars->ttd < 60 || vars->tte < 60
-		|| vars->tts < 60 || vars->nb_max_meal < -1)
+	if (vars->nb_philo < 1 || vars->ttd > INT_MAX || vars->tte > INT_MAX
+		|| vars->tts > INT_MAX || vars->nb_max_meal < -1 || ft_strlen(av[1]) > 11 || ft_strlen(av[2]) > 11 || ft_strlen(av[3]) > 11 || ft_strlen(av[4]) > 11 || (ac == 6 && ft_strlen(av[5]) > 11))
 	{
 		printf("Error: wrong arguments\n");
 		return (1);
