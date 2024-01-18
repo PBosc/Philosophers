@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:56:18 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/15 15:30:44 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/18 11:38:27 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,30 +38,23 @@ static void	philo_push_back(t_philo **philo, t_philo *new)
 	new->prev = tmp;
 }
 
-static void	zero_values(t_philo *philo, int time_to_sleep, int time_to_eat,
-		int time_to_die, int nb_eat_max)
+t_philo	*create_philo(int id)
 {
-	t_philo	*tmp;
+	t_philo	*philo;
 
-	tmp = philo;
-	while (tmp)
-	{
-		tmp->is_eating = 1;
-		tmp->is_sleeping = 0;
-		tmp->is_thinking = 0;
-		tmp->is_dead = 0;
-		tmp->nb_eat = 0;
-		tmp->last_eat = 0;
-		tmp->time_to_sleep = time_to_sleep;
-		tmp->time_to_eat = time_to_eat;
-		tmp->time_to_die = time_to_die;
-		tmp->nb_eat_max = nb_eat_max;
-		tmp = tmp->next;
-	}
+	philo = malloc(sizeof(t_philo));
+	if (!philo)
+		return (NULL);
+	philo->id = id;
+	philo->is_eating = 0;
+	philo->last_eat = 0;
+	philo->meal_number = 0;
+	philo->next = NULL;
+	philo->prev = NULL;
+	return (philo);
 }
 
-t_philo	*init_philos(int nb_philo, int time_to_sleep, int time_to_eat,
-		int time_to_die, int nb_eat_max)
+t_philo	*init_philos(t_vars *vars)
 {
 	t_philo	*philo;
 	t_philo	*tmp;
@@ -71,38 +64,34 @@ t_philo	*init_philos(int nb_philo, int time_to_sleep, int time_to_eat,
 	i = 1;
 	philo = NULL;
 	tmp = NULL;
-	while (i < nb_philo + 1)
+	while (i < vars->nb_philo + 1)
 	{
 		tmp2 = tmp;
-		tmp = malloc(sizeof(t_philo));
-		tmp->id = i;
-		tmp->fork_mutex = NULL;
-		tmp->print_mutex = NULL;
-		tmp->next = NULL;
+		tmp = create_philo(i);
+		if (!tmp)
+			return (free_philos(philo, vars), NULL);
 		tmp->prev = tmp2;
-		tmp->nb_philo = nb_philo;
-		tmp->start_time = get_time();
 		philo_push_back(&philo, tmp);
 		i++;
 	}
-	zero_values(philo, time_to_sleep, time_to_eat, time_to_die, nb_eat_max);
 	tmp = last_philo(philo);
 	tmp->next = philo;
 	philo->prev = tmp;
 	return (philo);
 }
 
-void	init_threads(t_philo *philo)
+int	init_threads(t_philo *philo, t_vars *vars)
 {
 	t_philo	*tmp;
 
 	tmp = philo;
-	while (tmp->id < tmp->nb_philo)
+	while (tmp->id < vars->nb_philo)
 	{
 		if (pthread_create(&tmp->thread, NULL, &routine, (void *)tmp) != 0)
-			printf("Error: pthread_create failed\n");
+			return(printf("Error: pthread_create failed\n"), 1);
 		tmp = tmp->next;
 	}
 	if (pthread_create(&tmp->thread, NULL, &routine, tmp) != 0)
-		printf("Error: pthread_create failed\n");
+			return(printf("Error: pthread_create failed\n"), 1);
+	return (0);
 }

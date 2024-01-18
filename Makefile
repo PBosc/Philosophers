@@ -6,11 +6,15 @@ BONUS			= philo_bonus
 
 INCLUDES		= includes/
 
-FILES 			= 	philo	\
-					utils	\
-					init	\
-					init_2	\
-					prints	\
+FILES 			= 	philo			\
+					utils			\
+					init			\
+					prints			\
+					actions			\
+					clean			\
+					management		\
+					mutex_handling	\
+					parsing
 
 SRCS 			= $(addsuffix .c, $(addprefix sources/, $(FILES)))
 

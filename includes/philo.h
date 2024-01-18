@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:38:24 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/15 15:33:49 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/18 11:47:23 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,40 +20,55 @@
 # include <limits.h>
 # include <unistd.h>
 
-typedef struct s_philo {
-	int				id;
-	int				is_eating;
-	int				is_sleeping;
-	int				is_thinking;
-	int				is_dead;
-	int				nb_eat;
-	int				last_eat;
-	pthread_mutex_t	*fork_mutex;
-	pthread_mutex_t	*print_mutex;
-	pthread_mutex_t	*eat_mutex;
-	struct s_philo	*next;
-	struct s_philo	*prev;
-	pthread_t		thread;
-	int				nb_philo;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
-	int				start_time;
-	int				nb_eat_max;
-}		t_philo;
+typedef struct s_philo
+{
+	pthread_t			thread;
+	pthread_mutex_t		fork;
+	int					id;
+	unsigned long		last_eat;
+	pthread_mutex_t		last_eat_mutex;
+	int					meal_number;
+	int					is_eating;
+	pthread_mutex_t		eat_mutex;
+	struct s_philo		*next;
+	struct s_philo		*prev;
+}				t_philo;
 
-t_philo	*init_philos(int nb_philo, int time_to_sleep,
-			int time_to_eat, int time_to_die, int nb_eat_max);
+typedef struct s_vars
+{
+	int					nb_philo;
+	int					ttd;
+	int					tte;
+	int					tts;
+	int					nb_max_meal;
+	pthread_mutex_t		print_mutex;
+	unsigned long		start_time;
+	int					end;
+	pthread_mutex_t		end_mutex;
+	int					ate_enough;
+	pthread_mutex_t		ate_mutex;
+	t_philo				*philo;
+}						t_vars;
+
+t_philo	*init_philos(t_vars *vars);
 int		ft_atoi(const char *nptr);
-void	init_threads(t_philo *philo);
+int		init_threads(t_philo *philo, t_vars *vars);
 int		get_time(void);
 void	*routine(void *philo);
-void	init_mutex(t_philo *philo);
-int		monitor(t_philo *philo);
+void	init_mutex(t_philo *philo, t_vars *vars);
+int		monitor(t_philo *philo, t_vars *vars);
 void	*ft_calloc(size_t nmemb, size_t size);
-void	print_eat(t_philo *philo);
-void	print_fork(t_philo *philo);
-void	print_sleep(t_philo *philo);
-void	print_think(t_philo *philo);
+void	print_eat(t_philo *philo, t_vars *vars);
+void	print_fork(t_philo *philo, t_vars *vars);
+void	print_sleep(t_philo *philo, t_vars *vars);
+void	print_think(t_philo *philo, t_vars *vars);
+int		stop_philos(t_vars *vars);
+void	eat(t_philo *philo, t_vars *vars);
+void	give_back_forks(t_philo *philo, t_vars *vars);
+void	take_forks(t_philo *philo, t_vars *vars);
+int		parsing(int ac, char **av, t_vars *vars);
+int		init_vars(t_vars *vars);
+void	free_philos(t_philo *philo, t_vars *vars);
+void	ft_usleep(int time);
 
 #endif
