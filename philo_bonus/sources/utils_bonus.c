@@ -1,16 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/14 18:28:39 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/18 19:52:14 by pibosc           ###   ########.fr       */
+/*   Created: 2024/01/18 19:58:34 by pibosc            #+#    #+#             */
+/*   Updated: 2024/01/18 21:43:08 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
+
+int	get_time(void)
+{
+	struct timeval	tv;
+	int				time;
+
+	gettimeofday(&tv, NULL);
+	time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+	return (time);
+}
+
+void	ft_usleep(int time)
+{
+	unsigned long	start;
+
+	start = get_time();
+	while ((int)(get_time() - start) < time)
+		usleep(10);
+}
+
+int	ft_strlen(const char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
 
 long long	ft_atoi(const char *nptr)
 {
@@ -37,48 +66,4 @@ long long	ft_atoi(const char *nptr)
 		i++;
 	}
 	return (sign * nb);
-}
-
-int	get_time(void)
-{
-	struct timeval	tv;
-	int				time;
-
-	gettimeofday(&tv, NULL);
-	time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
-	return (time);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	unsigned char	*tmp;
-
-	tmp = (unsigned char *) s;
-	while (n)
-	{
-		tmp[n - 1] = 0;
-		n--;
-	}
-}
-
-void	*ft_calloc(size_t nmemb, size_t size)
-{
-	void	*result;
-
-	if (size > 0 && nmemb > ULLONG_MAX / size)
-		return (NULL);
-	result = malloc(nmemb * size);
-	if (result)
-		ft_bzero(result, nmemb * size);
-	return (result);
-}
-
-int	ft_strlen(const char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
 }

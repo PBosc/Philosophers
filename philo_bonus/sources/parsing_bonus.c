@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   parsing_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/18 11:28:50 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/18 19:49:05 by pibosc           ###   ########.fr       */
+/*   Created: 2024/01/18 19:46:39 by pibosc            #+#    #+#             */
+/*   Updated: 2024/01/18 20:12:34 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 int	parsing(int ac, char **av, t_vars *vars)
 {
@@ -31,31 +31,5 @@ int	parsing(int ac, char **av, t_vars *vars)
 		printf("Error: wrong arguments\n");
 		return (1);
 	}
-	return (0);
-}
-
-void	single_philo(t_vars *vars)
-{
-	print_fork(vars->philo, vars);
-	ft_usleep(vars->ttd);
-	printf("%ld %d died\n", get_time() - vars->start_time, vars->philo->id);
-}
-
-int	init_vars(t_vars *vars)
-{
-	vars->start_time = get_time();
-	vars->philo = init_philos(vars);
-	if (!vars->philo)
-		return (1);
-	init_mutex(vars->philo, vars);
-	vars->end = 0;
-	vars->ate_enough = 0;
-	if (vars->nb_philo == 1)
-	{
-		single_philo(vars);
-		return (1);
-	}
-	if (init_threads(vars->philo, vars))
-		return (1);
 	return (0);
 }

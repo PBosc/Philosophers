@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:38:24 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/18 16:09:43 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/18 19:49:22 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <limits.h>
 # include <unistd.h>
 
-typedef struct s_vars t_vars;
+typedef struct s_vars	t_vars;
 
 typedef struct s_philo
 {

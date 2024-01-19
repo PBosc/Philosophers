@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:56:18 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/18 12:15:30 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/18 19:50:03 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,10 @@ int	init_threads(t_philo *philo, t_vars *vars)
 	while (tmp->id < vars->nb_philo)
 	{
 		if (pthread_create(&tmp->thread, NULL, &routine, (void *)tmp) != 0)
-			return(printf("Error: pthread_create failed\n"), 1);
+			return (printf("Error: pthread_create failed\n"), 1);
 		tmp = tmp->next;
 	}
 	if (pthread_create(&tmp->thread, NULL, &routine, tmp) != 0)
-			return(printf("Error: pthread_create failed\n"), 1);
+		return (printf("Error: pthread_create failed\n"), 1);
 	return (0);
 }

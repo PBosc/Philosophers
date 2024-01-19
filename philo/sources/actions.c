@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:28:47 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/18 15:47:17 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/18 19:42:42 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	eat(t_philo *philo, t_vars *vars)
 
 void	give_back_forks(t_philo *philo)
 {
-	if (philo->id % 2 == 0)
+	if (philo->id % 2)
 	{
 		pthread_mutex_unlock(&philo->fork);
 		pthread_mutex_unlock(&philo->next->fork);
@@ -44,7 +44,7 @@ void	give_back_forks(t_philo *philo)
 
 void	take_forks(t_philo *philo, t_vars *vars)
 {
-	if (philo->id % 2 == 0)
+	if (philo->id % 2)
 	{
 		pthread_mutex_lock(&philo->fork);
 		print_fork(philo, vars);

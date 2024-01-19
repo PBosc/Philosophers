@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 16:49:44 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/18 17:05:55 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/19 22:04:49 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,36 @@
 # include <semaphore.h>
 # include <fcntl.h>
 # include <sys/stat.h>
+# include <sys/wait.h>
+# include <signal.h>
 
 typedef struct s_vars
 {
+	pid_t				pid;
+	int					id;
+	int					meal_number;
 	int					nb_philo;
-	long long			ttd;
-	long long			tte;
-	long long			tts;
+	int					*pid_tab;
+	unsigned long		ttd;
+	unsigned long		tte;
+	unsigned long		tts;
 	int					nb_max_meal;
 	unsigned long		start_time;
-	int					end;
-	pthread_mutex_t		end_mutex;
-	int					ate_enough;
-	pthread_mutex_t		ate_mutex;
+	unsigned long		last_eat;
+	sem_t				*forks;
+	sem_t				*ate_enough;
+	sem_t				*died;
+	pthread_t			monitor;
 }						t_vars;
+
+int			parsing(int ac, char **av, t_vars *vars);
+int			get_time(void);
+void		ft_usleep(int time);
+void		init_sem(t_vars	*vars);
+void		init_vars(t_vars *vars);
+void		init_forks(t_vars *vars);
+long long	ft_atoi(const char *nptr);
+int			ft_strlen(const char *s);
+int			routine(t_vars *vars);
 
 #endif

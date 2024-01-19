@@ -1,28 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   clean.c                                            :+:      :+:    :+:   */
+/*   philo_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/18 11:32:07 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/18 19:49:31 by pibosc           ###   ########.fr       */
+/*   Created: 2024/01/18 19:17:52 by pibosc            #+#    #+#             */
+/*   Updated: 2024/01/19 22:46:03 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
-void	free_philos(t_philo *philo, t_vars *vars)
+int	main(int argc, char **argv)
 {
-	t_philo	*tmp;
-	t_philo	*tmp2;
+	t_vars	vars;
 
-	tmp = philo;
-	while (tmp->id < vars->nb_philo)
+	if (argc != 5 && argc != 6)
 	{
-		tmp2 = tmp;
-		tmp = tmp->next;
-		free(tmp2);
+		printf("Error: wrong number of arguments\n");
+		return (1);
 	}
-	free(tmp);
+	if (parsing(argc, argv, &vars))
+		return (1);
+	init_vars(&vars);
+	init_sem(&vars);
+	init_forks(&vars);
+	return (0);
 }

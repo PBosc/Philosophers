@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 19:38:27 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/18 15:58:49 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/19 23:05:36 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ void	*routine(void *tmp)
 
 	philo = (t_philo *)tmp;
 	vars = philo->vars;
-	if (philo->id % 2 == 0)
-		ft_usleep(500);
 	while (!stop_philos(vars))
 	{
 		take_forks(philo, vars);
@@ -41,13 +39,27 @@ void	*routine(void *tmp)
 		if (vars->tte >= vars->tts)
 			ft_usleep(vars->tte - vars->tts + 1);
 	}
-	return(NULL);
+	return (NULL);
+}
+
+void	join_threads(t_philo *philo, int nb_philo)
+{
+	t_philo	*tmp;
+	int		i;
+
+	tmp = philo;
+	i = 0;
+	while (i < nb_philo)
+	{
+		pthread_join(tmp->thread, NULL);
+		tmp = tmp->next;
+		i++;
+	}
 }
 
 int	main(int argc, char **argv)
 {
 	t_philo	*philo;
-	int		i;
 	t_vars	vars;
 
 	if (argc != 5 && argc != 6)
@@ -65,13 +77,7 @@ int	main(int argc, char **argv)
 			break ;
 	}
 	philo = vars.philo;
-	i = 0;
-	while (i < ft_atoi(argv[1]))
-	{
-		pthread_join(philo->thread, NULL);
-		philo = philo->next;
-		i++;
-	}
+	join_threads(philo, vars.nb_philo);
 	destroy_mutex(&vars);
 	free_philos(vars.philo, &vars);
 	return (0);

@@ -6,15 +6,15 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 19:40:20 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/18 13:39:22 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/18 19:50:26 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void init_mutex_p(t_philo *philo, t_vars *vars)
+void	init_mutex_p(t_philo *philo, t_vars *vars)
 {
-	t_philo *tmp;
+	t_philo	*tmp;
 
 	tmp = philo;
 	while (tmp->id < vars->nb_philo)
@@ -38,7 +38,7 @@ void	init_mutex(t_philo *philo, t_vars *vars)
 
 void	destroy_mutex_p(t_philo *philo, t_vars *vars)
 {
-	t_philo *tmp;
+	t_philo	*tmp;
 
 	tmp = philo;
 	while (tmp->id < vars->nb_philo)
