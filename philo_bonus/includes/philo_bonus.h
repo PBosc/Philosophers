@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 16:49:44 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/19 22:04:49 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/20 03:55:49 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,10 @@ typedef struct s_vars
 	sem_t				*forks;
 	sem_t				*ate_enough;
 	sem_t				*died;
+	sem_t				*print;
+	sem_t				*eat_sem;
 	pthread_t			monitor;
+	pthread_t			monitor_death;
 }						t_vars;
 
 int			parsing(int ac, char **av, t_vars *vars);
@@ -53,5 +56,6 @@ void		init_forks(t_vars *vars);
 long long	ft_atoi(const char *nptr);
 int			ft_strlen(const char *s);
 int			routine(t_vars *vars);
+void		philo_print(char *str, t_vars *vars);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 19:53:59 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/19 23:15:18 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/20 03:58:03 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,32 @@ void	*thread_m(void *tmp)
 {
 	t_vars	*vars;
 
+	ft_usleep(10);
 	vars = (t_vars *)tmp;
 	sem_wait(vars->died);
-	sem_close(vars->ate_enough);
-	sem_close(vars->forks);
-	sem_close(vars->died);
+	sem_post(vars->died);
+	exit(0);
+	return (NULL);
+}
+
+void	*thread_check_death(void *tmp)
+{
+	t_vars	*vars;
+
+	vars = (t_vars *)tmp;
+	while (1)
+	{
+		ft_usleep(5);
+		sem_wait(vars->eat_sem);
+		if (get_time() - vars->last_eat > vars->ttd)
+		{
+			sem_post(vars->eat_sem);
+			sem_post(vars->died);
+			philo_print("died", vars);
+			exit(0);
+		}
+		sem_post(vars->eat_sem);
+	}
 	return (NULL);
 }
 
@@ -32,11 +53,13 @@ int	eat(t_vars *vars)
 		return (1);
 	}
 	sem_wait(vars->forks);
-	printf("%ld %d has taken a fork\n", get_time() - vars->start_time, vars->id);
+	philo_print("has taken a fork", vars);
 	sem_wait(vars->forks);
-	printf("%ld %d has taken a fork\n", get_time() - vars->start_time, vars->id);
-	printf("%ld %d is eating\n", get_time() - vars->start_time, vars->id);
+	philo_print("has taken a fork", vars);
+	philo_print("is eating", vars);
+	sem_wait(vars->eat_sem);
 	vars->last_eat = get_time();
+	sem_post(vars->eat_sem);
 	ft_usleep(vars->tte);
 	sem_post(vars->forks);
 	sem_post(vars->forks);
@@ -46,28 +69,25 @@ int	eat(t_vars *vars)
 
 int	routine(t_vars *vars)
 {
-	static char	sem_name[10] = "/died_000";
+	//static char	sem_name[10] = "/died_000";
 
-	sem_name[8] = vars->id % 10 + '0';
-	sem_name[7] = (vars->id / 10) % 10 + '0';
-	sem_name[6] = (vars->id / 100) % 10 + '0';
-	sem_unlink(sem_name);
-	vars->died = sem_open(sem_name, O_CREAT, 0660, 1);
+	//sem_name[8] = vars->id % 10 + '0';
+	//sem_name[7] = (vars->id / 10) % 10 + '0';
+	//sem_name[6] = (vars->id / 100) % 10 + '0';
+	//sem_unlink(sem_name);
+	//vars->died = sem_open(sem_name, O_CREAT, 0660, 1);
+	sem_unlink("/eat_sem");
+	vars->eat_sem = sem_open("/eat_sem", O_CREAT, 0660, 1);
 	sem_wait(vars->died);
 	pthread_create(&vars->monitor, NULL, (void *)thread_m, vars);
+	pthread_create(&vars->monitor_death, NULL, (void *)thread_check_death, vars);
 	while (1)
 	{
-		if (get_time() - vars->last_eat > vars->ttd)
-		{
-			printf("%ld %d died\n", get_time() - vars->start_time, vars->id);
-			sem_post(vars->died);
-			return (0);
-		}
 		if (eat(vars))
 			return (0);
-		printf("%ld %d is sleeping\n", get_time() - vars->start_time, vars->id);
+		philo_print("is sleeping", vars);
 		ft_usleep(vars->tts);
-		printf("%ld %d is thinking\n", get_time() - vars->start_time, vars->id);
+		philo_print("is thinking", vars);
 	}
 	return (0);
 }
