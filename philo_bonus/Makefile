@@ -10,7 +10,8 @@ FILES 			= 	philo_bonus			\
 					utils_bonus			\
 					parsing_bonus		\
 					routine_bonus		\
-					sem_handling_bonus
+					sem_handling_bonus	\
+					monitor_bonus
 
 SRCS 			= $(addsuffix .c, $(addprefix sources/, $(FILES)))
 

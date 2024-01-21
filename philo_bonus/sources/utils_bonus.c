@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 19:58:34 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/20 03:22:06 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/21 03:16:10 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ long long	ft_atoi(const char *nptr)
 
 void	philo_print(char *str, t_vars *vars)
 {
-	sem_wait(vars->print);
+	sem_wait(vars->print_sem);
 	printf("%ld %d %s\n", get_time() - vars->start_time, vars->id, str);
-	sem_post(vars->print);
+	if (ft_strcmp(str, "died") != 0)
+		sem_post(vars->print_sem);
 }
