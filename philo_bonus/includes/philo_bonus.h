@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 16:49:44 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/21 02:58:51 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/23 00:19:08 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,13 @@ typedef struct s_vars
 	int					nb_max_meal;
 	unsigned long		start_time;
 	unsigned long		last_eat;
+	int					end;
+	pthread_t			meals_thread;
 	sem_t				*forks;
 	sem_t				*ate_enough;
-	sem_t				*died;
 	sem_t				*forking;
 	sem_t				*eat_sem;
+	sem_t				*death_sem;
 	sem_t				*print_sem;
 	pthread_t			monitor;
 	pthread_t			monitor_death;
