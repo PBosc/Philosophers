@@ -6,11 +6,34 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 02:22:21 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/23 00:38:00 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/23 01:45:27 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
+
+
+void *death_monitor(void *args)
+{
+	t_vars	*vars;
+
+	vars = (t_vars *)args;
+	while (1)
+	{
+		usleep(50);
+		sem_wait(vars->death_sem);
+		if (vars->end_thread)
+			return (0);
+		if (get_time() - vars->last_eat >= vars->ttd)
+		{
+			vars->end = 1;
+			sem_post(vars->forks);
+			return (0);
+		}
+		sem_post(vars->death_sem);
+	}
+	return (0);
+}
 
 void	kill_processes(pid_t *pid_tab, int nb_philo)
 {
@@ -54,6 +77,7 @@ int	start_meals_monitor(t_vars *vars)
 
 int	start_death_monitor(t_vars *vars)
 {
+	pthread_t	philo_thread;
 	static char	sem_name[10] = "/died_000";
 
 	sem_name[8] = vars->id % 10 + '0';
@@ -61,5 +85,7 @@ int	start_death_monitor(t_vars *vars)
 	sem_name[6] = (vars->id / 100) % 10 + '0';
 	sem_unlink(sem_name);
 	vars->eat_sem = sem_open(sem_name, O_CREAT, 0660, 1);
+	pthread_create(&philo_thread, NULL, &death_monitor, vars);
+	pthread_detach(philo_thread);
 	return (0);
 }

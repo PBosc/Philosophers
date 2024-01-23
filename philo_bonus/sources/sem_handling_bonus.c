@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 20:12:55 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/22 23:41:33 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/23 01:10:14 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	init_vars(t_vars *vars)
 	vars->last_eat = get_time();
 	vars->pid_tab = malloc(sizeof(int) * vars->nb_philo);
 	vars->end = 0;
+	vars->end_thread = 0;
 }
 
 void	init_forks(t_vars *vars)

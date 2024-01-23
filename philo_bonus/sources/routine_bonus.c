@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 19:53:59 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/23 00:38:09 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/23 01:57:12 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,31 @@
 
 void	take_forks(t_vars *vars)
 {
+	vars->end = 0;
 	sem_wait(vars->forking);
 	sem_wait(vars->forks);
+	usleep(50);
+	if (!vars->end)
+	{
+		sem_wait(vars->death_sem);
+		sem_post(vars->death_sem);
+	}
+	if (vars->end)
+	{
+		philo_print("died", vars);
+		close_sem(vars);
+		sem_close(vars->eat_sem);
+		exit(0);
+	}
 	philo_print("has taken a fork", vars);
 	sem_wait(vars->forks);
+	if (vars->end)
+	{
+		philo_print("died", vars);
+		close_sem(vars);
+		sem_close(vars->eat_sem);
+		exit(0);
+	}
 	philo_print("has taken a fork", vars);
 	sem_post(vars->forking);
 }
@@ -48,8 +69,6 @@ int	routine(t_vars *vars)
 	vars->last_eat = vars->start_time;
 	start_death_monitor(vars);
 	sem_wait(vars->ate_enough);
-	if (vars->id % 2)
-		ft_usleep(1);
 	while (1)
 	{
 		sem_post(vars->death_sem);
@@ -57,15 +76,6 @@ int	routine(t_vars *vars)
 		eat(vars);
 		sleeping(vars);
 		philo_print("is thinking", vars);
-		sem_wait(vars->eat_sem);
-		if (get_time() - vars->last_eat > vars->ttd)
-		{
-			philo_print("died", vars);
-			close_sem(vars);
-			sem_close(vars->eat_sem);
-			exit(0);
-		}
-		sem_post(vars->eat_sem);
 	}
 	return (0);
 }
