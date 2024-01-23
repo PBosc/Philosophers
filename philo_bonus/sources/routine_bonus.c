@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 19:53:59 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/23 01:57:12 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/23 02:08:02 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ void	sleeping(t_vars *vars)
 
 int	routine(t_vars *vars)
 {
-	vars->start_time = get_time();
 	vars->last_eat = vars->start_time;
 	start_death_monitor(vars);
 	sem_wait(vars->ate_enough);
