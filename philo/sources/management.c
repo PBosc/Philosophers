@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:57:41 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/24 01:29:20 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/24 02:46:55 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	get_min_end(t_vars *vars)
 {
 	int	min;
 
-	min = vars->tte;
+	min = vars->tte * (2 + vars->nb_philo % 2);
 	if (vars->nb_max_meal != -1)
 		min *= vars->nb_max_meal;
 	else
