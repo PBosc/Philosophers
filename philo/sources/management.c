@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 10:57:41 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/18 14:33:05 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/24 01:29:20 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,12 @@ int	stop_philos(t_vars *vars)
 	if (vars->ate_enough >= vars->nb_philo)
 		ate_enough = 1;
 	pthread_mutex_unlock(&vars->ate_mutex);
+	if (ate_enough)
+	{
+		pthread_mutex_lock(&vars->end_mutex);
+		vars->end = 1;
+		pthread_mutex_unlock(&vars->end_mutex);
+	}
 	return (ate_enough);
 }
 
