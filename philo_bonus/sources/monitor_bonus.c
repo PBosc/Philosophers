@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 02:22:21 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/24 01:09:24 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/24 02:29:14 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,18 @@ void	*death_monitor(void *args)
 		sem_wait(vars->death_sem);
 		if (vars->end_thread)
 			return (0);
+		sem_wait(vars->eat_sem);
 		if (get_time() - vars->last_eat >= vars->ttd)
 		{
+			philo_print("died", vars);
 			vars->end = 1;
+			sem_post(vars->eat_sem);
 			sem_post(vars->forks);
+			sem_post(vars->forking);
 			return (0);
 		}
+		else
+			sem_post(vars->eat_sem);
 		sem_post(vars->death_sem);
 	}
 	return (0);
@@ -85,7 +91,9 @@ int	start_death_monitor(t_vars *vars)
 	sem_name[6] = (vars->id / 100) % 10 + '0';
 	sem_unlink(sem_name);
 	vars->eat_sem = sem_open(sem_name, O_CREAT, 0660, 1);
+	philo_thread = vars->monitor_death[vars->id - 1];
 	pthread_create(&philo_thread, NULL, &death_monitor, vars);
 	pthread_detach(philo_thread);
+	free(vars->monitor_death);
 	return (0);
 }

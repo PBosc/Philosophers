@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 19:17:52 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/23 00:36:25 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/24 02:20:00 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,11 @@ int	main(int argc, char **argv)
 		return (1);
 	init_vars(&vars);
 	init_sem(&vars);
-	start_meals_monitor(&vars);
 	init_forks(&vars);
+	start_meals_monitor(&vars);
 	sim_wait_end(&vars);
 	close_sem(&vars);
 	free(vars.pid_tab);
+	free(vars.monitor_death);
 	return (0);
 }

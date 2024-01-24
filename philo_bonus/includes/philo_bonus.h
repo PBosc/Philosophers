@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 16:49:44 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/23 01:10:03 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/24 02:11:53 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef struct s_vars
 	sem_t				*death_sem;
 	sem_t				*print_sem;
 	pthread_t			monitor;
-	pthread_t			monitor_death;
+	pthread_t			*monitor_death;
 }						t_vars;
 
 int			parsing(int ac, char **av, t_vars *vars);
