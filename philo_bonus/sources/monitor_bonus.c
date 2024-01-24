@@ -6,14 +6,13 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 02:22:21 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/23 01:45:27 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/24 01:09:24 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-
-void *death_monitor(void *args)
+void	*death_monitor(void *args)
 {
 	t_vars	*vars;
 
@@ -68,7 +67,8 @@ int	start_meals_monitor(t_vars *vars)
 {
 	if (vars->nb_max_meal != -1)
 	{
-		if (pthread_create(&vars->meals_thread, NULL, &meals_monitor, vars) != 0)
+		if (pthread_create(&vars->meals_thread,
+				NULL, &meals_monitor, vars) != 0)
 			return (-1);
 		pthread_detach(vars->meals_thread);
 	}

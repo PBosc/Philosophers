@@ -6,7 +6,7 @@
 /*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 19:53:59 by pibosc            #+#    #+#             */
-/*   Updated: 2024/01/23 02:08:02 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/01/24 01:10:05 by pibosc           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,7 @@ void	take_forks(t_vars *vars)
 	sem_wait(vars->forks);
 	usleep(50);
 	if (!vars->end)
-	{
-		sem_wait(vars->death_sem);
-		sem_post(vars->death_sem);
-	}
+		(sem_wait(vars->death_sem), sem_post(vars->death_sem));
 	if (vars->end)
 	{
 		philo_print("died", vars);
